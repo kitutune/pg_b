@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
@@ -22,27 +22,31 @@ class TodoItem(BaseModel):
     title: str
     completed: bool
 
-todos = []
+todos: List[TodoItem] = []
 
 @app.get("/todos", response_model=List[TodoItem])
-async def get_todos():
+async def get_todos() -> List[TodoItem]:
+    """Get all todo items."""
     return todos
 
 @app.post("/todos", response_model=TodoItem)
-async def create_todo(todo: TodoItem):
+async def create_todo(todo: TodoItem) -> TodoItem:
+    """Create a new todo item."""
     todos.append(todo)
     return todo
 
 @app.put("/todos/{todo_id}", response_model=TodoItem)
-async def update_todo(todo_id: int, todo: TodoItem):
+async def update_todo(todo_id: int, todo: TodoItem) -> TodoItem:
+    """Update an existing todo item."""
     for index, item in enumerate(todos):
         if item.id == todo_id:
             todos[index] = todo
             return todo
-    return None
+    raise HTTPException(status_code=404, detail="Todo item not found")
 
 @app.delete("/todos/{todo_id}")
-async def delete_todo(todo_id: int):
+async def delete_todo(todo_id: int) -> dict:
+    """Delete a todo item."""
     global todos
     todos = [item for item in todos if item.id != todo_id]
     return {"message": "Todo deleted successfully"}
