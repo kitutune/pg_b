@@ -17,23 +17,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 class TodoItem(BaseModel):
     id: int
     title: str
     completed: bool
 
+
 todos: List[TodoItem] = []
+
 
 @app.get("/todos", response_model=List[TodoItem])
 async def get_todos() -> List[TodoItem]:
     """Get all todo items."""
     return todos
 
+
 @app.post("/todos", response_model=TodoItem)
 async def create_todo(todo: TodoItem) -> TodoItem:
     """Create a new todo item."""
     todos.append(todo)
     return todo
+
 
 @app.put("/todos/{todo_id}", response_model=TodoItem)
 async def update_todo(todo_id: int, todo: TodoItem) -> TodoItem:
@@ -43,6 +48,7 @@ async def update_todo(todo_id: int, todo: TodoItem) -> TodoItem:
             todos[index] = todo
             return todo
     raise HTTPException(status_code=404, detail="Todo item not found")
+
 
 @app.delete("/todos/{todo_id}")
 async def delete_todo(todo_id: int) -> dict:
