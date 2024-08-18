@@ -25,7 +25,11 @@ class TodoItem(BaseModel):
     completed: bool
 
 
-todos: List[TodoItem] = []
+todos: List[TodoItem] = [
+    TodoItem(id=1, title="Buy groceries", completed=False),
+    TodoItem(id=2, title="Read a book", completed=True),
+    TodoItem(id=3, title="Walk the dog", completed=False)
+]
 
 
 @app.get("/todos", response_model=List[TodoItem])
