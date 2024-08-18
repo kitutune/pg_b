@@ -1,7 +1,8 @@
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import List
+from pydantic import BaseModel, Field
+from typing import List, Optional
 
 app = FastAPI()
 
@@ -19,7 +20,7 @@ app.add_middleware(
 
 
 class TodoItem(BaseModel):
-    id: int
+    id: Optional[int] = Field(None, description="The unique identifier for a todo item.")
     title: str
     completed: bool
 
@@ -36,6 +37,8 @@ async def get_todos() -> List[TodoItem]:
 @app.post("/todos", response_model=TodoItem)
 async def create_todo(todo: TodoItem) -> TodoItem:
     """Create a new todo item."""
+    # id をバックエンドで生成
+    todo.id = todos[-1].id + 1 if todos else 1
     todos.append(todo)
     return todo
 
