@@ -1,0 +1,11 @@
+{
+  // Python ファイルに対する設定
+  "[python]": {
+    // 差分エディタで空白のトリムを無視しない設定
+    "diffEditor.ignoreTrimWhitespace": false,
+    // タイプ時に自動でフォーマットを適用します
+    "editor.formatOnType": true,
+    // 単語ベースの補完を無効にします
+    "editor.wordBasedSuggestions": "off"
+  }
+}
